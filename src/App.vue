@@ -1,27 +1,57 @@
 <template>
   <Navbar @modal-show="modalToggle" />
-  <Modal @model-toggle="modalToggle" :status="modalStatus" />
+  <Modal @model-toggle="modalToggle" :status="modalStatus" @store-expence="storeExpence" />
+  <Expences :allExpence="expences" />
 </template>
 
 <script>
 import Navbar from './components/Navbar'
 import Modal from './components/Modal'
+import Expences from './components/Expences'
 export default {
   name: 'App',
   components: {
     Navbar,
-    Modal
+    Modal,
+    Expences
   },
   data(){
     return{
       modalStatus:false,
+      expences: {
+        balance: 0,
+        income: 0,
+        expence: 0,
+        history: [],
+      },
     };
   },
   methods: {
     modalToggle(){
        this.modalStatus = !this.modalStatus;
-    }
-  }
+    },
+    storeExpence(payload){
+      const number = parseInt(payload.number);
+      // console.log(typeof number);
+      if(number > 1){
+        this.expences = {
+          ...this.expences,
+          income: this.expences.income + number,
+          balance: this.expences.balance + number,
+          history: [{ title: payload.title, number}, ...this.expences.history]
+        }
+      } else if(number < 1){
+        this.expences = {
+          ...this.expences,
+          expence: this.expences.expence + number,
+          balance: this.expences.balance + number,
+          history: [{ title: payload.title, number}, ...this.expences.history]
+        }
+
+      }
+      this.modalStatus = false;
+    },
+  },
 };
 </script>
 

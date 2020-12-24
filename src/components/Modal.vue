@@ -3,15 +3,17 @@
     <div class="modal" @click.self="toggle">
       <div class="modal__container">
           <div class="modal__form">
-              <form>
+              <form @submit.prevent="addExpence">
                   <div class="modal__group">
                       <h3>Add Expence</h3>
                   </div>
                   <div class="modal__group">
-                      <input type="text" class="modal__control" placeholder="Title..." />
+                      <input type="text" class="modal__control" placeholder="Title..."
+                      v-model="title" />
                   </div>
                   <div class="modal__group">
-                      <input type="number" class="modal__control" placeholder="Expence..." />
+                      <input type="number" class="modal__control" placeholder="Expence..."
+                      v-model="number" />
                   </div>
                   <div class="modal__group">
                       <input type="submit" value="Add Expence" class="button">
@@ -28,11 +30,22 @@
 export default {
     name: 'Modal',
     props: ['status'],
+    data(){
+        return {
+            title: "",
+            number: "",
+        };
+    },
     methods: {
         toggle (){
             this.$emit("model-toggle");
-        }
-    }
+        },
+        addExpence(){
+            this.$emit("store-expence",{title: this.title, number: this.number});
+            this.title = "";
+            this.number = "";
+        },
+    },
 }
 </script>
 
@@ -47,6 +60,7 @@ export default {
         display: flex;
         justify-content: center;
         align-items: center;
+        z-index: 1;
     }
     .modal__container {
         background: #fff;
@@ -75,6 +89,6 @@ export default {
         padding: 10px 15px;
         cursor: pointer;
         width: 100%;
-
+        outline: none;
     }
 </style>
